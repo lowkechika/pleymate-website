@@ -1,9 +1,18 @@
-from flask import Flask, request, redirect, url_for, render_template, flash
-import sqlalchemy
 import datetime as dt
+from flask import Flask, request, redirect, url_for, render_template, flash
+from flask_wtf import FlaskForm
+import secrets
+
+secret_key = secrets.token_urlsafe(16)
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'dseri49dm850sk404mf'
+app.config['SECRET_KEY'] = secret_key
+
+print(secret_key)
+
+
+class Posts(FlaskForm):
+    pass
 
 
 @app.route('/')
