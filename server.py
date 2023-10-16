@@ -1,18 +1,25 @@
 import datetime as dt
 from flask import Flask, request, redirect, url_for, render_template, flash
 from flask_wtf import FlaskForm
+from wtforms import StringField, EmailField, SubmitField
+from wtforms.validators import DataRequired, Length
 import secrets
+from flask_bootstrap import Bootstrap5
+from flask_ckeditor import CKEditor, CKEditorField
 
 secret_key = secrets.token_urlsafe(16)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secret_key
+bootstrap = Bootstrap5(app)
+ckeditor = CKEditor(app)
 
-print(secret_key)
 
-
-class Posts(FlaskForm):
-    pass
+class ContactForm(FlaskForm):
+    name = StringField(label='Full Name', validators=[DataRequired()], render_kw={'placeholder': 'Will Smith'})
+    email = EmailField(label='Enter email', validators=[DataRequired()], render_kw={'placeholder': 'myemail@gmail.com'})
+    message = CKEditorField('message')
+    submit = SubmitField(label='Submit')
 
 
 @app.route('/')
@@ -24,13 +31,14 @@ def home():
 
 @app.route('/connect', methods=['GET', 'POST'])
 def contact():
+    form = ContactForm()
     time = dt.datetime
     year = time.today().year
-    if request.method == 'POST':
-        print(request.form)
-        flash(message='Submitted Successfully')
-        return redirect(url_for('contact'))
-    return render_template('contact.html', year=year)
+    if form.validate_on_submit():
+        if request.method == 'POST':
+            flash(message='Submitted Successfully')
+            return redirect(url_for('contact'))
+    return render_template('contact.html', year=year, form=form)
 
 
 @app.route('/projects')
