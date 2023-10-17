@@ -73,9 +73,9 @@ def blog():
 
 
 def send_email(name, email, message):
-    sender_email = os.environ.get('S_EMAIL')
-    sender_password = os.environ.get('PASSWORD')
-    receiver_email = os.environ.get('R_EMAIL')
+    sender_email = os.getenv('S_EMAIL')
+    sender_password = os.getenv('PASSWORD')
+    receiver_email = os.getenv('R_EMAIL')
     with SMTP('smtp.gmail.com') as connection:
         connection.starttls()
         connection.login(user=sender_email, password=sender_password)
